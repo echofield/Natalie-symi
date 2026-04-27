@@ -76,8 +76,8 @@ export function AnimatedLineChart({
   }, [paths]);
 
   return (
-    <div ref={wrapRef} className="mt-12">
-      <p className="eyebrow mb-5">{title}</p>
+    <div ref={wrapRef} className="chart-wrap">
+      <p className="chart-title" dangerouslySetInnerHTML={{ __html: title }} />
       <svg viewBox="0 0 640 230" width="100%" role="img" aria-label={title}>
         <line x1="34" y1="196" x2="606" y2="196" stroke="currentColor" strokeOpacity="0.15" />
         {paths.map((line) => (
@@ -89,7 +89,7 @@ export function AnimatedLineChart({
             stroke={line.color}
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth={line.color === "#0F3D2E" ? 2.5 : 1.6}
+            strokeWidth={line.color === "#c94a2e" || line.color === "#C94A2E" ? 2.5 : 1.6}
           />
         ))}
         {labels.map((label, index) => {

@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { kv } from "@vercel/kv";
 
 export const runtime = "edge";
 
@@ -42,6 +43,17 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
+async function checkKvRateLimit(ip: string) {
+  const hasKv = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  if (!hasKv) return checkRateLimit(ip);
+
+  const windowId = Math.floor(Date.now() / windowMs);
+  const key = `maison:dossier:${ip}:${windowId}`;
+  const count = await kv.incr(key);
+  if (count === 1) await kv.expire(key, 60 * 60);
+  return count <= maxRequests;
+}
+
 export async function POST(req: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const accessToken = process.env.DEMO_ACCESS_TOKEN;
@@ -55,7 +67,7 @@ export async function POST(req: NextRequest) {
   }
 
   const ip = getIp(req);
-  if (!checkRateLimit(ip)) {
+  if (!(await checkKvRateLimit(ip))) {
     return json({ error: "Demo limit reached. Try again in an hour." }, 429);
   }
 

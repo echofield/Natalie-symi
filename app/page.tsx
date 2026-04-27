@@ -1,5 +1,5 @@
-import { EnginePage } from "@/components/EnginePage";
+import { EconomicsPage } from "@/components/EconomicsPage";
 
 export default function Home() {
-  return <EnginePage />;
+  return <EconomicsPage />;
 }

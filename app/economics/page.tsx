@@ -1,5 +1,5 @@
-import { EconomicsPage } from "@/components/EconomicsPage";
+import { redirect } from "next/navigation";
 
 export default function Economics() {
-  return <EconomicsPage />;
+  redirect("/");
 }

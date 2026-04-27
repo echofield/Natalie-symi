@@ -31,20 +31,20 @@ export function AmbientParticles() {
       canvas.height = rect.height * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      particles = Array.from({ length: 28 }, () => ({
+      particles = Array.from({ length: 25 }, () => ({
         x: Math.random() * rect.width,
         y: Math.random() * rect.height,
         r: 1 + Math.random() * 1.6,
-        alpha: 0.05 + Math.random() * 0.05,
-        vx: -0.06 + Math.random() * 0.12,
-        vy: -0.04 + Math.random() * 0.08,
+        alpha: 0.04 + Math.random() * 0.04,
+        vx: -0.035 + Math.random() * 0.07,
+        vy: -0.025 + Math.random() * 0.05,
       }));
     };
 
     const draw = () => {
       const rect = canvas.getBoundingClientRect();
       ctx.clearRect(0, 0, rect.width, rect.height);
-      ctx.fillStyle = "#0F3D2E";
+      ctx.fillStyle = "#B8956A";
 
       particles.forEach((p) => {
         p.x += p.vx;

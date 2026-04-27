@@ -19,8 +19,7 @@ Set these in Vercel project settings. Do not commit real values.
 ANTHROPIC_API_KEY=sk-ant-...
 DEMO_ACCESS_TOKEN=random-32-char-token
 NEXT_PUBLIC_DEMO_ACCESS_TOKEN=random-32-char-token
-KV_REST_API_URL=...
-KV_REST_API_TOKEN=...
+KV_REDIS_URL=...
 ```
 
 `DEMO_ACCESS_TOKEN` and `NEXT_PUBLIC_DEMO_ACCESS_TOKEN` must match. The public
@@ -30,8 +29,8 @@ value is a crawler/budget guard, not authentication.
 
 - Anthropic output is capped at `1500` tokens in the proxy.
 - Dossier generation is capped at `5` calls per IP per hour.
-- Vercel KV/Redis is used when `KV_REST_API_URL` and `KV_REST_API_TOKEN` are
-  present; local development falls back to in-memory limiting.
+- Vercel Redis is used when `KV_REDIS_URL` is present; local development falls
+  back to in-memory limiting.
 - Set a daily Anthropic spend cap of €3 in the Anthropic console before sharing
   the URL.
 

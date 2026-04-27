@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
-import { kv } from "@vercel/kv";
+import Redis from "ioredis";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 type RateEntry = {
   count: number;
@@ -11,6 +11,7 @@ type RateEntry = {
 const windowMs = 60 * 60 * 1000;
 const maxRequests = 5;
 const buckets = new Map<string, RateEntry>();
+let redis: Redis | null = null;
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -44,13 +45,18 @@ function checkRateLimit(ip: string) {
 }
 
 async function checkKvRateLimit(ip: string) {
-  const hasKv = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
-  if (!hasKv) return checkRateLimit(ip);
+  const redisUrl = process.env.KV_REDIS_URL;
+  if (!redisUrl) return checkRateLimit(ip);
+
+  redis ||= new Redis(redisUrl, {
+    maxRetriesPerRequest: 1,
+    enableReadyCheck: false,
+  });
 
   const windowId = Math.floor(Date.now() / windowMs);
   const key = `maison:dossier:${ip}:${windowId}`;
-  const count = await kv.incr(key);
-  if (count === 1) await kv.expire(key, 60 * 60);
+  const count = await redis.incr(key);
+  if (count === 1) await redis.expire(key, 60 * 60);
   return count <= maxRequests;
 }
 

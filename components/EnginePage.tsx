@@ -91,7 +91,7 @@ export function EnginePage() {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-demo-token": process.env.NEXT_PUBLIC_DEMO_ACCESS_TOKEN || "",
+          "x-demo-token": (process.env.NEXT_PUBLIC_DEMO_ACCESS_TOKEN || "").trim(),
         },
         body: JSON.stringify({
           prompt: `${buildSystemPrompt(mode)}\n\nBRAND PROMPT:\n${prompt.trim()}`,

@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     return json({ error: "Demo server is missing required environment variables." }, 500);
   }
 
-  if (req.headers.get("x-demo-token") !== accessToken) {
+  if ((req.headers.get("x-demo-token") || "").trim() !== accessToken.trim()) {
     return json({ error: "Unauthorized demo request." }, 401);
   }
 
